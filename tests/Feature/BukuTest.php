@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Buku;
 use App\Models\Kategori;
+use App\Models\Peminjaman;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -104,6 +105,30 @@ class BukuTest extends TestCase
             ->assertOk();
 
         $this->assertDatabaseMissing('buku', [
+            'id' => $buku->id,
+        ]);
+    }
+
+    public function test_gagal_menghapus_buku_yang_memiliki_riwayat_peminjaman(): void
+    {
+        $kategori = Kategori::create(['nama' => 'Sejarah']);
+        $buku = Buku::create([
+            'kategori_id' => $kategori->id,
+            'judul' => 'Sapiens',
+            'penulis' => 'Yuval Noah Harari',
+            'stok' => 3,
+        ]);
+
+        Peminjaman::create([
+            'buku_id' => $buku->id,
+            'nama_peminjam' => 'Dedi',
+            'tanggal_pinjam' => now(),
+        ]);
+
+        $this->deleteJson("/api/buku/{$buku->id}")
+            ->assertUnprocessable();
+
+        $this->assertDatabaseHas('buku', [
             'id' => $buku->id,
         ]);
     }
