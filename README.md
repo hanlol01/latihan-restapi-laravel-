@@ -130,9 +130,6 @@ curl -X PATCH http://127.0.0.1:8000/api/peminjaman/1/kembalikan \
 
 ## Skrip FizzBuzz
 
-Skrip FizzBuzz (PHP) tersedia di folder `fizzbuzz/fizzbuzz.php` dan bisa dijalankan langsung lewat terminal:
+skrip fizzBuzz (PHP) tersedia pada folder `fizzbuzz/fizzbuzz.php` 
 
-```bash
-php fizzbuzz/fizzbuzz.php
-```
 
