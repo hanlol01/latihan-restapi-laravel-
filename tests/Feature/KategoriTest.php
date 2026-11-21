@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Buku;
 use App\Models\Kategori;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -74,6 +75,24 @@ class KategoriTest extends TestCase
             ->assertOk();
 
         $this->assertDatabaseMissing('kategori', [
+            'id' => $kategori->id,
+        ]);
+    }
+
+    public function test_gagal_menghapus_kategori_yang_masih_memiliki_buku(): void
+    {
+        $kategori = Kategori::create(['nama' => 'Filsafat']);
+        Buku::create([
+            'kategori_id' => $kategori->id,
+            'judul' => 'Dunia Sophie',
+            'penulis' => 'Jostein Gaarder',
+            'stok' => 2,
+        ]);
+
+        $this->deleteJson("/api/kategori/{$kategori->id}")
+            ->assertUnprocessable();
+
+        $this->assertDatabaseHas('kategori', [
             'id' => $kategori->id,
         ]);
     }
