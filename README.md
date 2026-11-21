@@ -127,3 +127,12 @@ curl -H "Accept: application/json" http://127.0.0.1:8000/api/peminjaman
 curl -X PATCH http://127.0.0.1:8000/api/peminjaman/1/kembalikan \
   -H "Accept: application/json"
 ```
+
+## Skrip FizzBuzz
+
+Skrip FizzBuzz (PHP) tersedia di folder `fizzbuzz/fizzbuzz.php` dan bisa dijalankan langsung lewat terminal:
+
+```bash
+php fizzbuzz/fizzbuzz.php
+```
+
