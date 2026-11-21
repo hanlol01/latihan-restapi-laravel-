@@ -50,4 +50,50 @@ class PeminjamanController extends Controller
             'data' => $peminjaman,
         ], 201);
     }
+
+    public function kembalikan(int $id): JsonResponse
+    {
+        $hasil = DB::transaction(function () use ($id) {
+            // Kunci baris peminjaman agar pengembalian ganda tidak menambah stok dua kali.
+            $peminjaman = Peminjaman::whereKey($id)->lockForUpdate()->first();
+
+            if (! $peminjaman) {
+                return 'tidak_ditemukan';
+            }
+
+            if ($peminjaman->tanggal_kembali !== null) {
+                return 'sudah_dikembalikan';
+            }
+
+            $peminjaman->update([
+                'tanggal_kembali' => now(),
+            ]);
+
+            Buku::whereKey($peminjaman->buku_id)->increment('stok');
+
+            return $peminjaman;
+        });
+
+        if ($hasil === 'tidak_ditemukan') {
+            return response()->json([
+                'pesan' => 'Data peminjaman tidak ditemukan.',
+            ], 404);
+        }
+
+        if ($hasil === 'sudah_dikembalikan') {
+            return response()->json([
+                'pesan' => 'Buku ini sudah dikembalikan sebelumnya.',
+            ], 422);
+        }
+
+        $hasil->load([
+            'buku:id,kategori_id,judul,penulis,stok',
+            'buku.kategori:id,nama',
+        ]);
+
+        return response()->json([
+            'pesan' => 'Buku berhasil dikembalikan.',
+            'data' => $hasil,
+        ]);
+    }
 }
