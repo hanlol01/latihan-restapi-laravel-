@@ -68,6 +68,12 @@ class BukuController extends Controller
 
     public function destroy(Buku $buku): JsonResponse
     {
+        if ($buku->peminjaman()->exists()) {
+            return response()->json([
+                'pesan' => 'Buku tidak dapat dihapus karena memiliki riwayat peminjaman.',
+            ], 422);
+        }
+
         $buku->delete();
 
         return response()->json([
