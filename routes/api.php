@@ -9,3 +9,4 @@ Route::apiResource('kategori', KategoriController::class);
 Route::apiResource('buku', BukuController::class);
 
 Route::post('peminjaman', [PeminjamanController::class, 'store']);
+Route::patch('peminjaman/{id}/kembalikan', [PeminjamanController::class, 'kembalikan'])->whereNumber('id');
