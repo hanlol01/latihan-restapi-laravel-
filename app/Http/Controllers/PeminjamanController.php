@@ -10,6 +10,30 @@ use Illuminate\Support\Facades\DB;
 
 class PeminjamanController extends Controller
 {
+    public function index(Request $request): JsonResponse
+    {
+        $status = $request->query('status', 'dipinjam');
+
+        if (! in_array($status, ['dipinjam', 'dikembalikan', 'semua'], true)) {
+            return response()->json([
+                'pesan' => 'Parameter status hanya menerima: dipinjam, dikembalikan, atau semua.',
+            ], 422);
+        }
+
+        $daftarPeminjaman = Peminjaman::query()
+            ->select(['id', 'buku_id', 'nama_peminjam', 'tanggal_pinjam', 'tanggal_kembali'])
+            ->with([
+                'buku:id,kategori_id,judul,penulis,stok',
+                'buku.kategori:id,nama',
+            ])
+            ->when($status === 'dipinjam', fn ($query) => $query->whereNull('tanggal_kembali'))
+            ->when($status === 'dikembalikan', fn ($query) => $query->whereNotNull('tanggal_kembali'))
+            ->latest('tanggal_pinjam')
+            ->paginate(15);
+
+        return response()->json($daftarPeminjaman);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
