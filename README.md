@@ -59,7 +59,7 @@ Contoh body `POST /api/kategori`:
 
 ```json
 {
-  "nama": "Hans"
+  "nama": "Programmer Maasa Kini"
 }
 ```
 
