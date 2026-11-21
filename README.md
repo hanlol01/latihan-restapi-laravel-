@@ -59,7 +59,7 @@ Contoh body `POST /api/kategori`:
 
 ```json
 {
-  "nama": "Pemrograman"
+  "nama": "Hans"
 }
 ```
 
@@ -78,9 +78,9 @@ Contoh body `POST /api/buku`:
 ```json
 {
   "kategori_id": 1,
-  "judul": "Clean Code",
-  "penulis": "Robert C. Martin",
-  "tahun_terbit": 2008,
+  "judul": "Kisah Programmer",
+  "penulis": "Robert Chaniago",
+  "tahun_terbit": 2026,
   "stok": 5
 }
 ```
@@ -98,7 +98,7 @@ Contoh body `POST /api/peminjaman`:
 ```json
 {
   "buku_id": 1,
-  "nama_peminjam": "Andi Pratama"
+  "nama_peminjam": "Farhan Maulana"
 }
 ```
 
